@@ -404,11 +404,14 @@ double LifelongSlamToolbox::computeIntersect(
 {
   double x_l, x_u, y_l, y_u;
   computeIntersectBounds(s1, s2, x_l, x_u, y_l, y_u);
-  const double intersect = (y_u - y_l) * (x_u - x_l);
+  const double width = x_u - x_l;
+  const double height = y_u - y_l;
 
-  if (intersect < 0.0) {
+  if (width <= 0.0 || height <= 0.0) {
     return 0.0;
   }
+
+  const double intersect = height * width;
 
   return intersect;
 }

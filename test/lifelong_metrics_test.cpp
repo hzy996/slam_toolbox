@@ -90,6 +90,30 @@ TEST(LifelingMetricsTests, TestIntersect)
   delete s2;
 }
 
+TEST(LifelingMetricsTests, TestNoOverlapIntersect)
+{
+  LocalizedRangeScan * s1 = new LocalizedRangeScan();
+  LocalizedRangeScan * s2 = new LocalizedRangeScan();
+  Pose2 p1 = Pose2(0.0, 0.0, 0.0);
+  Pose2 p2 = Pose2(5.0, 5.0, 0.0);
+  s1->SetBarycenterPose(p1);
+  s2->SetBarycenterPose(p2);
+  BoundingBox2 bb1, bb2;
+  bb1.SetMinimum(Vector2<kt_double>(-0.5, -0.5));
+  bb1.SetMaximum(Vector2<kt_double>(0.5, 0.5));
+  bb2.SetMinimum(Vector2<kt_double>(4.5, 4.5));
+  bb2.SetMaximum(Vector2<kt_double>(5.5, 5.5));
+  s1->SetBoundingBox(bb1);
+  s2->SetBoundingBox(bb2);
+  bool dirty = false;
+  s1->SetIsDirty(dirty);
+  s2->SetIsDirty(dirty);
+  EXPECT_EQ(slam_toolbox::LifelongSlamToolbox::computeIntersect(s1, s2), 0.0);
+  EXPECT_EQ(slam_toolbox::LifelongSlamToolbox::computeIntersectOverUnion(s1, s2), 0.0);
+  delete s1;
+  delete s2;
+}
+
 TEST(LifelingMetricsTests, TestIntersectOverUnion)
 {
   LocalizedRangeScan * s1 = new LocalizedRangeScan();
